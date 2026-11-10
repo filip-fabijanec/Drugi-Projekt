@@ -6,14 +6,17 @@ html
         title Drugi Projekt
     body
         main(class="main")
+
             form(method="post", action="/")
                 div
                     label(for="switch") Switch
                     input(type="checkbox", id="switch", name="switch")
-            h2 Forum 
+            if user
+                h2 Dobrodošli #{user.username} na forumu, možete ostaviti komentar ispod.
+            else
+                h2 Dobrodošli na forumu, prijavite se da biste ostavili komentar
             h1 Komentari 
             div(id="comments", class="comments")
-                p Učitavanje komentara...
 
             form(method="post", action="/comment")
                 div

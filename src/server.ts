@@ -25,15 +25,20 @@ app.get('/api/comments', function (_req, res) {
     res.json(comments);
 });
 
-app.post('/comment', function (req, res) {
+app.post('/comment', auth.requiresAuthentication, function (req, res) {
     const text = typeof req.body.comment === 'string' ? req.body.comment.trim() : '';
 
     comments.unshift({
         username: req.user?.username ?? 'Anonimno',
         text
     });
-    if (comments.length > 100) comments.pop();
 
+    res.redirect('/');
+});
+
+app.post('/comment/delete', auth.requiresAuthentication, function (req, res) {
+    const index = parseInt(req.body.index, 10);
+    comments.splice(index, 1);
     res.redirect('/');
 });
 
