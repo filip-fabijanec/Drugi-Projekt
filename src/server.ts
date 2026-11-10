@@ -38,10 +38,9 @@ app.post('/comment', auth.requiresAuthentication, function (req, res) {
     res.redirect('/');
 });
 
-app.post('/comment/delete', auth.requiresAuthentication, function (req, res) {
-    const index = Number(req.body.index);
-    comments.splice(index, 1);
-    res.sendStatus(204);
+app.post('/comment/delete-all', auth.requiresAuthentication, function (_req, res) {
+    comments.length = 0;
+    res.redirect('/');
 });
 
 app.get('/login', function (req, res) {
