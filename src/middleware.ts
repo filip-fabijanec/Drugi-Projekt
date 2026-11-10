@@ -52,8 +52,12 @@ function setUserInfo(req : Request, res : Response, next : NextFunction) {
 }
 
 function requiresAuthentication(req : Request, res : Response, next : NextFunction) {  
-  if (req.user) next();
-  else alert("You must be logged in to perform this action.");            
+  if (req.user) {
+    next();
+    return;
+  }
+
+  res.status(401).send('Authentication required. Please log in at ' + _loginUrl);
 }
   
 export {initCookieAuth, signInUser, signOutUser, requiresAuthentication};
