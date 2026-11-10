@@ -19,15 +19,12 @@ const comments: Comment[] = [];
 const users = new Map<string, string>();
 
 let demoHttpOnly = true;
+let protectAdminPage = true;
 
 auth.initCookieAuth(app, '/login');
 
 app.get('/',  function (req, res) {
-    if (req.user?.username === 'admin') {
-        res.redirect('/admin');
-        return;
-    }
-    res.render('index', {user : req.user, httpOnly: demoHttpOnly});
+    res.render('index', {user : req.user, httpOnly: demoHttpOnly, protectAdminPage});
 });
 
 app.get('/api/comments', function (_req, res) {
@@ -104,8 +101,13 @@ app.post('/security/cookie', function (req, res) {
     res.sendStatus(200);
 });
 
+app.post('/security/access-control', function (req, res) {
+    protectAdminPage = req.body.enabled === true;
+    res.sendStatus(200);
+});
+
 app.get('/admin', auth.requiresAuthentication, function (req, res) {
-    if (req.user?.username !== 'admin') {
+    if (protectAdminPage && req.user?.username !== 'admin') {
         res.status(403).send('Access denied. Admins only.');
         return;
     }

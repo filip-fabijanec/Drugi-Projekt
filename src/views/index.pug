@@ -15,6 +15,13 @@ html
                 div
                     label(for="httponly") HttpOnly zaštita:
                     input(type="checkbox", id="httponly", name="httponly", checked=httpOnly)
+            form(method="post", action="/")
+                div
+                    label(for="broken-access") Broken Access Control zaštita:
+                    input(type="checkbox", id="broken-access", name="broken-access", checked=protectAdminPage)
+            if user
+                p
+                    a(href="/admin") Admin stranica
             if user
                 h2 Dobrodošli #{user.username} na forumu, možete ostaviti komentar ispod.
             else

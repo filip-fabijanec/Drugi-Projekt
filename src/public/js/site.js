@@ -1,15 +1,17 @@
 const commentsElement = document.querySelector('#comments');
 const protectionSwitch = document.querySelector('#switch');
 const httponlySwitch = document.querySelector('#httponly');
+const accessControlSwitch = document.querySelector('#broken-access');
 
 let protectionEnabled = localStorage.getItem('xssProtection') === 'true';
-protectionSwitch.checked = protectionEnabled;
-
-protectionSwitch.addEventListener('change', () => {
-    protectionEnabled = protectionSwitch.checked;
-    localStorage.setItem('xssProtection', protectionEnabled);
-    loadComments();
-});
+if (protectionSwitch) {
+    protectionSwitch.checked = protectionEnabled;
+    protectionSwitch.addEventListener('change', () => {
+        protectionEnabled = protectionSwitch.checked;
+        localStorage.setItem('xssProtection', protectionEnabled);
+        loadComments();
+    });
+}
 
 
 async function loadComments() {
@@ -48,13 +50,25 @@ if (commentsElement) {
     loadComments();
 }
 
-httponlySwitch.addEventListener('change', async () => {
+httponlySwitch?.addEventListener('change', async () => {
     const response = await fetch('/security/cookie', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({httpOnly: httponlySwitch.checked})
+    });
+
+    accessControlSwitch?.addEventListener('change', async () => {
+        const response = await fetch('/security/access-control', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({enabled: accessControlSwitch.checked})
+        });
+
+        if (!response.ok) {
+            alert('Promjena kontrole pristupa nije uspjela.');
+        }
     });
 
     if (!response.ok) {
