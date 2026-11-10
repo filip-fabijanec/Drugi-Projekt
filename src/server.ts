@@ -18,7 +18,7 @@ const comments: Comment[] = [];
 auth.initCookieAuth(app, '/login');
 
 app.get('/',  function (req, res) {
-    res.render('index', {user : req?.user || null});
+    res.render('index', {user : req.user});
 });
 
 app.get('/api/comments', function (_req, res) {

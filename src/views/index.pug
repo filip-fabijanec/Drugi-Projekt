@@ -21,7 +21,7 @@ html
                     textarea(id="comment", name="comment", maxlength="2000", required)
                 button(type="submit") Objavi komentar
             
-            if req.user
+            if user
                 form(method="post", action="/logout")
                     button(type="submit") Logout    
             else
