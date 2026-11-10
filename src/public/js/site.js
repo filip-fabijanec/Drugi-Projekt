@@ -2,10 +2,12 @@ const commentsElement = document.querySelector('#comments');
 const protectionSwitch = document.querySelector('#switch');
 const httponlySwitch = document.querySelector('#httponly');
 
-let protectionEnabled = false;
+let protectionEnabled = localStorage.getItem('xssProtection') === 'true';
+protectionSwitch.checked = protectionEnabled;
 
 protectionSwitch.addEventListener('change', () => {
     protectionEnabled = protectionSwitch.checked;
+    localStorage.setItem('xssProtection', protectionEnabled);
     loadComments();
 });
 
