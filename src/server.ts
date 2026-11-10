@@ -48,21 +48,9 @@ app.get('/login', function (req, res) {
 
 app.post('/login',  function (req, res) {        
     const username = req.body.username;    
-	const password = req.body.password;        
-    if (password !== 'some password') {
-        res.render('login');
-    }
-    else {
-        auth.signInUser(res, username);
-
-        const returnUrl = req.query.returnUrl;
-        if (typeof returnUrl === 'string') {
-            res.redirect(returnUrl); //TO DO: (Security) Check if this is a local url
-        }        
-        else {
-            res.redirect("/");
-        }
-    }
+	  const password = req.body.password;        
+    auth.signInUser(res, username);
+    res.redirect("/");
 });
 
 app.post('/logout',   function (req, res) {
