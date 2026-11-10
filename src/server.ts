@@ -23,6 +23,10 @@ let demoHttpOnly = true;
 auth.initCookieAuth(app, '/login');
 
 app.get('/',  function (req, res) {
+    if (req.user?.username === 'admin') {
+        res.redirect('/admin');
+        return;
+    }
     res.render('index', {user : req.user, httpOnly: demoHttpOnly});
 });
 
@@ -98,6 +102,10 @@ app.post('/logout',   function (req, res) {
 app.post('/security/cookie', function (req, res) {
     demoHttpOnly = req.body.httpOnly === true;
     res.sendStatus(200);
+});
+
+app.get('/admin', auth.requiresAuthentication, function (req, res) {
+    res.render('admin', {user : req.user});
 });
 
 const port = Number(process.env.PORT) || 4102;

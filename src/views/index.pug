@@ -22,10 +22,6 @@ html
             h1 Komentari 
             div(id="comments", class="comments")
 
-            if user
-                form(method="post", action="/comment/delete-all")
-                    button(type="submit") Obriši sve komentare
-
             form(method="post", action="/comment")
                 div
                     label(for="comment") Komentar:
