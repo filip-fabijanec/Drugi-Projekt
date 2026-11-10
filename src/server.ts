@@ -27,10 +27,6 @@ app.get('/api/comments', function (_req, res) {
 
 app.post('/comment', function (req, res) {
     const text = typeof req.body.comment === 'string' ? req.body.comment.trim() : '';
-    if (!text || text.length > 2000) {
-        res.status(400).send('Komentar mora imati između 1 i 2000 znakova.');
-        return;
-    }
 
     comments.unshift({
         username: req.user?.username ?? 'Anonimno',
