@@ -30,10 +30,10 @@ function initCookieAuth(app : Express, loginUrl : string) {
   app.use(setUserInfo);
 }
 
-function signInUser(res : Response, username : string) {
+function signInUser(res: Response, username: string, httpOnly = true) {
   res.cookie('user', username, {
-      signed : true,
-      httpOnly: true
+      signed: true,
+      httpOnly
   });
 }
 

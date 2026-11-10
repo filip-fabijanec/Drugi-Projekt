@@ -1,5 +1,6 @@
 const commentsElement = document.querySelector('#comments');
 const protectionSwitch = document.querySelector('#switch');
+const httponlySwitch = document.querySelector('#httponly');
 
 let protectionEnabled = false;
 
@@ -44,3 +45,17 @@ async function loadComments() {
 if (commentsElement) {
     loadComments();
 }
+
+httponlySwitch.addEventListener('change', async () => {
+    const response = await fetch('/security/cookie', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({httpOnly: httponlySwitch.checked})
+    });
+
+    if (!response.ok) {
+        alert('Promjena HttpOnly postavke nije uspjela.');
+    }
+});

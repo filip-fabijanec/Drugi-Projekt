@@ -4,6 +4,7 @@ import path from 'path';
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.set("views", path.join(import.meta.dirname, "views"));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(import.meta.dirname, "public"))); //css and js are served as separate files (not included in pug)
@@ -17,10 +18,12 @@ const comments: Comment[] = [];
 
 const users = new Map<string, string>();
 
+let demoHttpOnly = true;
+
 auth.initCookieAuth(app, '/login');
 
 app.get('/',  function (req, res) {
-    res.render('index', {user : req.user});
+    res.render('index', {user : req.user, httpOnly: demoHttpOnly});
 });
 
 app.get('/api/comments', function (_req, res) {
@@ -56,7 +59,7 @@ app.post('/login',  function (req, res) {
     }
     const storedPassword = users.get(username);
     if (storedPassword && storedPassword === password) {
-        auth.signInUser(res, username);
+        auth.signInUser(res, username, demoHttpOnly);
         res.redirect("/");
     } else {
         res.status(401).send('Invalid username or password.');
@@ -83,13 +86,18 @@ app.post('/register', function (req, res) {
     }
 
     users.set(username, password);
-    auth.signInUser(res, username);
+    auth.signInUser(res, username, demoHttpOnly);
     res.redirect("/");
 });
 
 app.post('/logout',   function (req, res) {
     auth.signOutUser(res);
     res.redirect("/");
+});
+
+app.post('/security/cookie', function (req, res) {
+    demoHttpOnly = req.body.httpOnly === true;
+    res.sendStatus(200);
 });
 
 const port = Number(process.env.PORT) || 4102;

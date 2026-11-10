@@ -11,6 +11,10 @@ html
                 div
                     label(for="switch") XSS zaštita:
                     input(type="checkbox", id="switch", name="switch")
+            form(method="post", action="/")
+                div
+                    label(for="httponly") HttpOnly zaštita:
+                    input(type="checkbox", id="httponly", name="httponly", checked=httpOnly)
             if user
                 h2 Dobrodošli #{user.username} na forumu, možete ostaviti komentar ispod.
             else
