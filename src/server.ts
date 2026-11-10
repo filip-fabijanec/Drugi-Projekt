@@ -39,9 +39,9 @@ app.post('/comment', auth.requiresAuthentication, function (req, res) {
 });
 
 app.post('/comment/delete', auth.requiresAuthentication, function (req, res) {
-    const index = parseInt(req.body.index, 10);
+    const index = Number(req.body.index);
     comments.splice(index, 1);
-    res.redirect('/');
+    res.sendStatus(204);
 });
 
 app.get('/login', function (req, res) {
