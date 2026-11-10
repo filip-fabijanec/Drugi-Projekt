@@ -6,14 +6,27 @@ html
         title Drugi Projekt
     body
         main(class="main")
-            h2 Forum 
+
+            form(method="post", action="/")
+                div
+                    label(for="switch") Switch
+                    input(type="checkbox", id="switch", name="switch")
+            if user
+                h2 Dobrodošli #{user.username} na forumu, možete ostaviti komentar ispod.
+            else
+                h2 Dobrodošli na forumu, prijavite se da biste ostavili komentar
             h1 Komentari 
             div(id="comments", class="comments")
-                p Učitavanje komentara...
-                
-                form(method="post", action="/comment")
-                    div
-                        label(for="comment") Komentar:
-                        textarea(id="comment", name="comment", maxlength="2000", required)
-                    button(type="submit") Objavi komentar
-                
+
+            form(method="post", action="/comment")
+                div
+                    label(for="comment") Komentar:
+                    textarea(id="comment", name="comment", maxlength="2000", required)
+                button(type="submit") Objavi komentar
+            
+            if user
+                form(method="post", action="/logout")
+                    button(type="submit") Logout    
+            else
+                form(method="get", action="/login")
+                    button(type="submit") Login

@@ -7,6 +7,7 @@ app.set("views", path.join(import.meta.dirname, "views"));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(import.meta.dirname, "public"))); //css and js are served as separate files (not included in pug)
 const comments = [];
+const users = new Map();
 auth.initCookieAuth(app, '/login');
 app.get('/', function (req, res) {
     res.render('index', { user: req.user });
@@ -14,18 +15,17 @@ app.get('/', function (req, res) {
 app.get('/api/comments', function (_req, res) {
     res.json(comments);
 });
-app.post('/comment', function (req, res) {
+app.post('/comment', auth.requiresAuthentication, function (req, res) {
     const text = typeof req.body.comment === 'string' ? req.body.comment.trim() : '';
-    if (!text || text.length > 2000) {
-        res.status(400).send('Komentar mora imati između 1 i 2000 znakova.');
-        return;
-    }
     comments.unshift({
         username: req.user?.username ?? 'Anonimno',
         text
     });
-    if (comments.length > 100)
-        comments.pop();
+    res.redirect('/');
+});
+app.post('/comment/delete', auth.requiresAuthentication, function (req, res) {
+    const index = parseInt(req.body.index, 10);
+    comments.splice(index, 1);
     res.redirect('/');
 });
 app.get('/login', function (req, res) {
@@ -34,19 +34,37 @@ app.get('/login', function (req, res) {
 app.post('/login', function (req, res) {
     const username = req.body.username;
     const password = req.body.password;
-    if (password !== 'some password') {
-        res.render('login');
+    if (!username || !password) {
+        res.status(400).send('Username and password are required.');
+        return;
+    }
+    const storedPassword = users.get(username);
+    if (storedPassword && storedPassword === password) {
+        auth.signInUser(res, username);
+        res.redirect("/");
     }
     else {
-        auth.signInUser(res, username);
-        const returnUrl = req.query.returnUrl;
-        if (typeof returnUrl === 'string') {
-            res.redirect(returnUrl); //TO DO: (Security) Check if this is a local url
-        }
-        else {
-            res.redirect("/");
-        }
+        res.status(401).send('Invalid username or password.');
     }
+});
+app.get('/register', function (req, res) {
+    res.render('register');
+});
+app.post('/register', function (req, res) {
+    const username = req.body.username;
+    const password = req.body.password;
+    const email = req.body.email;
+    if (!username || !password || !email) {
+        res.status(400).send('Username, password, and email are required.');
+        return;
+    }
+    if (users.has(username)) {
+        res.status(409).send('Username already exists.');
+        return;
+    }
+    users.set(username, password);
+    auth.signInUser(res, username);
+    res.redirect("/");
 });
 app.post('/logout', function (req, res) {
     auth.signOutUser(res);
