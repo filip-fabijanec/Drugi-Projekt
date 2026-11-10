@@ -57,7 +57,7 @@ function requiresAuthentication(req : Request, res : Response, next : NextFuncti
     return;
   }
 
-  res.status(401).send('Authentication required. Please log in at ' + _loginUrl);
+  res.redirect(302, `${_loginUrl}?returnUrl=${encodeURIComponent(req.originalUrl)}`); 
 }
   
 export {initCookieAuth, signInUser, signOutUser, requiresAuthentication};
