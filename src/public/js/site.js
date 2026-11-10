@@ -1,4 +1,13 @@
 const commentsElement = document.querySelector('#comments');
+const protectionSwitch = document.querySelector('#switch');
+
+let protectionEnabled = false;
+
+protectionSwitch.addEventListener('change', () => {
+    protectionEnabled = protectionSwitch.checked;
+    loadComments();
+});
+
 
 async function loadComments() {
     const response = await fetch('/api/comments');
@@ -22,7 +31,11 @@ async function loadComments() {
         const text = document.createElement('p');
 
         author.textContent = comment.username;
-        text.textContent = comment.text;
+        if (protectionEnabled) {
+            text.textContent = comment.text;
+        } else {
+            text.innerHTML = comment.text;
+        }
         item.append(author, text);
         commentsElement.append(item);
     }
