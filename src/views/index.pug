@@ -2,11 +2,17 @@ html
     head
         meta(charset="utf-8")
         link(rel="stylesheet", href="/css/site.css")
+        script(src="/js/site.js", defer)
         title Drugi Projekt
     body
         main(class="main")
             h2 Forum 
             h1 Komentari 
-            div(class="comments")
-                p Prvi komentar
+            div(id="comments", class="comments")
+                p Učitavanje komentara...
 
+            form(method="post", action="/comment")
+                div
+                    label(for="comment") Komentar:
+                    textarea(id="comment", name="comment", maxlength="2000", required)
+                button(type="submit") Objavi komentar

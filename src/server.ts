@@ -8,10 +8,37 @@ app.set("views", path.join(import.meta.dirname, "views"));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(import.meta.dirname, "public"))); //css and js are served as separate files (not included in pug)
 
+type Comment = {
+    username: string;
+    text: string;
+};
+
+const comments: Comment[] = [];
+
 auth.initCookieAuth(app, '/login');
 
 app.get('/',  function (req, res) {
     res.render('index', {user : req.user});
+});
+
+app.get('/api/comments', function (_req, res) {
+    res.json(comments);
+});
+
+app.post('/comment', function (req, res) {
+    const text = typeof req.body.comment === 'string' ? req.body.comment.trim() : '';
+    if (!text || text.length > 2000) {
+        res.status(400).send('Komentar mora imati između 1 i 2000 znakova.');
+        return;
+    }
+
+    comments.unshift({
+        username: req.user?.username ?? 'Anonimno',
+        text
+    });
+    if (comments.length > 100) comments.pop();
+
+    res.redirect('/');
 });
 
 app.get('/login', function (req, res) {
@@ -40,17 +67,6 @@ app.post('/login',  function (req, res) {
 app.post('/logout',   function (req, res) {
     auth.signOutUser(res);
     res.redirect("/");
-});
-
-app.get('/private', auth.requiresAuthentication, function (req, res) {   
-    const username = req.user!.username;     
-    if (username.toLowerCase() === 'alice' || username.toLowerCase() === 'bob') {
-            res.render('private', {user : req.user});
-    }
-    else {
-        res.status(403);
-        res.end('Forbidden for ' + username);
-    }        
 });
 
 const port = Number(process.env.PORT) || 4102;

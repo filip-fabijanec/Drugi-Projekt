@@ -5,8 +5,12 @@ html
         title Drugi Projekt
     body
         main(class="main")
-            h2 Forum 
-            h1 Komentari 
-            div(class="comments")
-                p Prvi komentar
-
+            h2 Login
+            form(method="post", action="/login")
+                div
+                    label(for="username") Username:
+                    input(type="text", id="username", name="username", required)
+                div
+                    label(for="password") Password:
+                    input(type="password", id="password", name="password", required)
+                button(type="submit") Login
