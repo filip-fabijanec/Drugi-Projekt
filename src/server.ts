@@ -105,6 +105,10 @@ app.post('/security/cookie', function (req, res) {
 });
 
 app.get('/admin', auth.requiresAuthentication, function (req, res) {
+    if (req.user?.username !== 'admin') {
+        res.status(403).send('Access denied. Admins only.');
+        return;
+    }
     res.render('admin', {user : req.user});
 });
 
