@@ -26,7 +26,7 @@ declare global {
 var _loginUrl : string;
 function initCookieAuth(app : Express, loginUrl : string) {
   _loginUrl = loginUrl;
-  app.use(cookieParser(process.env.COOKIE_KEY || 'development-only-cookie-secret'));
+  app.use(cookieParser(process.env.COOKIE_KEY));
   app.use(setUserInfo);
 }
 
