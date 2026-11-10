@@ -15,6 +15,8 @@ type Comment = {
 
 const comments: Comment[] = [];
 
+const users = new Map<string, string>();
+
 auth.initCookieAuth(app, '/login');
 
 app.get('/',  function (req, res) {
@@ -48,7 +50,40 @@ app.get('/login', function (req, res) {
 
 app.post('/login',  function (req, res) {        
     const username = req.body.username;    
-	  const password = req.body.password;        
+	  const password = req.body.password;      
+    if (!username || !password) {
+        res.status(400).send('Username and password are required.');
+        return;
+    }
+    const storedPassword = users.get(username);
+    if (storedPassword && storedPassword === password) {
+        auth.signInUser(res, username);
+        res.redirect("/");
+    } else {
+        res.status(401).send('Invalid username or password.');
+    }  
+});
+
+app.get('/register', function (req, res) {
+    res.render('register');
+});
+
+app.post('/register', function (req, res) {
+    const username = req.body.username;
+    const password = req.body.password;
+    const email = req.body.email;
+
+    if (!username || !password || !email) {
+        res.status(400).send('Username, password, and email are required.');
+        return;
+    }
+
+    if (users.has(username)) {
+        res.status(409).send('Username already exists.');
+        return;
+    }
+
+    users.set(username, password);
     auth.signInUser(res, username);
     res.redirect("/");
 });

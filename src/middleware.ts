@@ -53,7 +53,7 @@ function setUserInfo(req : Request, res : Response, next : NextFunction) {
 
 function requiresAuthentication(req : Request, res : Response, next : NextFunction) {  
   if (req.user) next();
-  else res.redirect(302, `${_loginUrl}?returnUrl=${encodeURIComponent(req.originalUrl)}`);            
+  else alert("You must be logged in to perform this action.");            
 }
   
 export {initCookieAuth, signInUser, signOutUser, requiresAuthentication};
