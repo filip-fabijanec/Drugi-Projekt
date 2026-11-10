@@ -16,3 +16,10 @@ html
                     label(for="comment") Komentar:
                     textarea(id="comment", name="comment", maxlength="2000", required)
                 button(type="submit") Objavi komentar
+            
+            if req.user
+                form(method="post", action="/logout")
+                    button(type="submit") Logout    
+            else
+                form(method="get", action="/login")
+                    button(type="submit") Login
