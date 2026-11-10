@@ -6,6 +6,10 @@ html
         title Drugi Projekt
     body
         main(class="main")
+            form(method="post", action="/")
+                div
+                    label(for="switch") Switch
+                    input(type="checkbox", id="switch", name="switch")
             h2 Forum 
             h1 Komentari 
             div(id="comments", class="comments")
