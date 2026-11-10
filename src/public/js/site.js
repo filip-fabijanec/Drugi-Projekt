@@ -59,19 +59,29 @@ httponlySwitch?.addEventListener('change', async () => {
         body: JSON.stringify({httpOnly: httponlySwitch.checked})
     });
 
-    accessControlSwitch?.addEventListener('change', async () => {
+    if (!response.ok) {
+        alert('Promjena HttpOnly postavke nije uspjela.');
+    }
+});
+
+if (accessControlSwitch) {
+    const savedSetting = localStorage.getItem('brokenAccessControl');
+    if (savedSetting !== null) {
+        accessControlSwitch.checked = savedSetting === 'true';
+    }
+
+    const saveAccessControl = async () => {
+        localStorage.setItem('brokenAccessControl', accessControlSwitch.checked);
         const response = await fetch('/security/access-control', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({enabled: accessControlSwitch.checked})
         });
-
         if (!response.ok) {
             alert('Promjena kontrole pristupa nije uspjela.');
         }
-    });
+    };
 
-    if (!response.ok) {
-        alert('Promjena HttpOnly postavke nije uspjela.');
-    }
-});
+    saveAccessControl();
+    accessControlSwitch.addEventListener('change', saveAccessControl);
+}
