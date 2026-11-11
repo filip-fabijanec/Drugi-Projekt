@@ -9,7 +9,8 @@ html
             div(class="upute")
                 h2 Upute
                 p Ovaj forum je namijenjen za testiranje XSS ranjivosti. 
-                p Upišite komentar u polje ispod kao što je <img src="x" onerror="alert('Kolačić je' + document.cookie)"> i kliknite na "Objavi komentar". 
+                - var primjer = '<img src="x" onerror="alert(\'Kolačić je\' + document.cookie)">'
+                p Upišite komentar u polje ispod kao što je #{primjer} i kliknite na "Objavi komentar". 
                 p Ranjivost se može isključiti ili uključiti pomoću checkboxa "Escapiranje komentara" i "HttpOnly zaštita".
             form(method="post", action="/")
                 div
