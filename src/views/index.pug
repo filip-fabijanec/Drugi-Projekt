@@ -6,15 +6,24 @@ html
         title Drugi Projekt
     body
         main(class="main")
-
+            div(class="upute")
+                h2 Upute
+                p Ovaj forum je namijenjen za testiranje XSS ranjivosti. 
+                p Upišite komentar u polje ispod kao što je <img src="x" onerror="alert('Kolačić je' + document.cookie)"> i kliknite na "Objavi komentar". 
+                p Ranjivost se može isključiti ili uključiti pomoću checkboxa "Escapiranje komentara" i "HttpOnly zaštita".
             form(method="post", action="/")
                 div
-                    label(for="switch") XSS zaštita:
+                    label(for="switch") Escapiranje komentara:
                     input(type="checkbox", id="switch", name="switch")
             form(method="post", action="/")
                 div
                     label(for="httponly") HttpOnly zaštita:
                     input(type="checkbox", id="httponly", name="httponly", checked=httpOnly)
+            div(class="upute")
+                h2 Upute
+                p Ovaj forum je namijenjen i za testiranje Broken Access Control ranjivosti.
+                p Ako ste prijavljeni kao admin možete otići na admin stranicu i tamo obrisati sve komentare klikom na "Obriši sve komentare". Ako niste prijavljeni kao admin, dobit ćete poruku o odbijenom pristupu.
+                p Ranjivost se može isključiti ili uključiti pomoću checkboxa "Broken Access Control zaštita".
             form(method="post", action="/")
                 div
                     label(for="broken-access") Broken Access Control zaštita:
