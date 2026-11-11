@@ -42,7 +42,11 @@ app.post('/comment', auth.requiresAuthentication, function (req, res) {
     res.redirect('/');
 });
 
-app.post('/comment/delete-all', auth.requiresAuthentication, function (_req, res) {
+app.post('/comment/delete-all', auth.requiresAuthentication, function (req, res) {
+    if (protectAdminPage && req.user?.username !== 'admin') {
+        res.status(403).send('Access denied. Admins only.');
+        return;
+    }
     comments.length = 0;
     res.redirect('/');
 });
